@@ -11,7 +11,7 @@ def print_(board):
     for i in range(3):
         temp=' '
         c=0
-        for j in board[:,i]:
+        for j in board[i,:]:
             if j != -1:
                 temp+=str(j)
             else:
@@ -29,8 +29,115 @@ def choose(board,pos,sign):
     
     return board
 
-def update_weights(weights,board,sign):
-    pass 
+def update_weights(board,choice_board,sign,ind):
+    update = 0
+    if ind == 1 or ind == 7:
+        if board[choice_board[ind-1][0],choice_board[ind-1][1]] == sign and board[choice_board[ind+1][0],choice_board[ind+1][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-1][0],choice_board[ind-1][1]] == -1 and board[choice_board[ind+1][0],choice_board[ind+1][1]] == sign:
+            update +=1
+        if ind ==1:
+            if board[choice_board[4][0],choice_board[4][1]] == sign and board[choice_board[7][0],choice_board[7][1]] == -1:
+                update +=1
+            elif board[choice_board[4][0],choice_board[4][1]] == -1 and board[choice_board[7][0],choice_board[7][1]] == sign:
+                update +=1
+        elif ind ==1:
+            if board[choice_board[4][0],choice_board[4][0]] == sign and board[choice_board[1][0],choice_board[1][0]] == -1:
+                update +=1
+            elif board[choice_board[4][0],choice_board[4][0]] == -1 and board[choice_board[1],choice_board[1][0]] == sign:
+                update +=1
+    elif ind == 3 or ind == 5:
+        if board[choice_board[ind-3][0],choice_board[ind-3][1]] == sign and board[choice_board[ind+3][0],choice_board[ind+3][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-3][0],choice_board[ind-3][1]] == -1 and board[choice_board[ind+3][0],choice_board[ind+3][1]] == sign:
+            update +=1
+        if ind ==3:
+            if board[choice_board[4][0],choice_board[4][1]] == sign and board[choice_board[5][0],choice_board[5][1]] == -1:
+                update +=1
+            elif board[choice_board[4][0],choice_board[4][1]] == -1 and board[choice_board[5][0],choice_board[5][1]] == sign:
+                update +=1
+        elif ind ==5:
+            if board[choice_board[4][0],choice_board[4][1]] == sign and board[choice_board[3][0],choice_board[3][1]] == -1:
+                update +=1
+            elif board[choice_board[4][0],choice_board[4][1]] == -1 and board[choice_board[3][0],choice_board[3][1]] == sign:
+                update +=1
+    elif ind == 0:
+        if board[choice_board[4][0],choice_board[4][1]] == sign and board[choice_board[8][0],choice_board[8][1]] == -1:
+            update +=1
+        elif board[choice_board[4][0],choice_board[4][1]] == -1 and board[choice_board[8][0],choice_board[8][1]] == sign:
+            update +=1
+        if board[choice_board[ind+1][0],choice_board[ind+1][1]] == sign and board[choice_board[ind+2][0],choice_board[ind+2][1]] == -1:
+            update +=1
+        elif board[choice_board[ind+1][0],choice_board[ind+1][1]] == -1 and board[choice_board[ind+2][0],choice_board[ind+2][1]] == sign:
+            update +=1
+        if board[choice_board[ind+3][0],choice_board[ind+3][1]] == sign and board[choice_board[ind+6][0],choice_board[ind+6][1]] == -1:
+            update +=1
+        elif board[choice_board[ind+3][0],choice_board[ind+3][1]] == -1 and board[choice_board[ind+6][0],choice_board[ind+6][1]] == sign:
+            update +=1
+    elif ind == 2:
+        if board[choice_board[4][0],choice_board[4][1]] == sign and board[choice_board[6][0],choice_board[6][1]] == -1:
+            update +=1
+        elif board[choice_board[4][0],choice_board[4][1]] == -1 and board[choice_board[6][0],choice_board[6][1]] == sign:
+            update +=1
+        if board[choice_board[ind-1][0],choice_board[ind-1][1]] == sign and board[choice_board[ind-2][0],choice_board[ind-2][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-1][0],choice_board[ind-1][1]] == -1 and board[choice_board[ind-2][0],choice_board[ind-2][1]] == sign:
+            update +=1
+        if board[choice_board[ind+3][0],choice_board[ind+3][1]] == sign and board[choice_board[ind+6][0],choice_board[ind+6][1]] == -1:
+            update +=1
+        elif board[choice_board[ind+3][0],choice_board[ind+3][1]] == -1 and board[choice_board[ind+6][0],choice_board[ind+6][1]] == sign:
+            update +=1
+    elif ind == 6:
+        if board[choice_board[4][0],choice_board[4][1]] == sign and board[choice_board[2][0],choice_board[2][1]] == -1:
+            update +=1
+        elif board[choice_board[4][0],choice_board[4][1]] == -1 and board[choice_board[2][0],choice_board[2][1]] == sign:
+            update +=1
+        if board[choice_board[ind+1][0],choice_board[ind+1][1]] == sign and board[choice_board[ind+2][0],choice_board[ind+2][1]] == -1:
+            update +=1
+        elif board[choice_board[ind+1][0],choice_board[ind+1][1]] == -1 and board[choice_board[ind+2][0],choice_board[ind+2][1]] == sign:
+            update +=1
+        if board[choice_board[ind-3][0],choice_board[ind-3][1]] == sign and board[choice_board[ind-6][0],choice_board[ind-6][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-3][0],choice_board[ind-3][1]] == -1 and board[choice_board[ind-6][0],choice_board[ind-6][1]] == sign:
+            update +=1
+    elif ind == 8:
+        if board[choice_board[4][0],choice_board[4][1]] == sign and board[choice_board[0][0],choice_board[0][1]] == -1:
+            update +=1
+        elif board[choice_board[4][0],choice_board[4][1]] == -1 and board[choice_board[0][0],choice_board[0][1]] == sign:
+            update +=1
+        if board[choice_board[ind-1][0],choice_board[ind-1][1]] == sign and board[choice_board[ind-2][0],choice_board[ind-2][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-1][0],choice_board[ind-1][1]] == -1 and board[choice_board[ind-2][0],choice_board[ind-2][1]] == sign:
+            update +=1
+        if board[choice_board[ind-3][0],choice_board[ind-3][1]] == sign and board[choice_board[ind-6][0],choice_board[ind-6][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-3][0],choice_board[ind-3][1]] == -1 and board[choice_board[ind-6][0],choice_board[ind-6][1]] == sign:
+            update +=1
+    elif ind == 4:
+        if board[choice_board[ind-4][0],choice_board[ind-4][1]] == sign and board[choice_board[ind+4][0],choice_board[ind+4][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-4][0],choice_board[ind-4][1]] == -1 and board[choice_board[ind+4][0],choice_board[ind+4][1]] == sign:
+            update +=1
+        if board[choice_board[ind-2][0],choice_board[ind-2][1]] == sign and board[choice_board[ind+2][0],choice_board[ind+2][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-2][0],choice_board[ind-2][1]] == -1 and board[choice_board[ind+2][0],choice_board[ind+2][1]] == sign:
+            update +=1
+        if board[choice_board[ind-3][0],choice_board[ind-3][1]] == sign and board[choice_board[ind+3][0],choice_board[ind+3][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-3][0],choice_board[ind-3][1]] == -1 and board[choice_board[ind+3][0],choice_board[ind+3][1]] == sign:
+            update +=1
+        if board[choice_board[ind-1][0],choice_board[ind-1][1]] == sign and board[choice_board[ind+1][0],choice_board[ind+1][1]] == -1:
+            update +=1
+        elif board[choice_board[ind-1][0],choice_board[ind-1][1]] == -1 and board[choice_board[ind+1][0],choice_board[ind+1][1]] == sign:
+            update +=1
+    update += 0.25
+    return update
+        
+        
+
+
+
+    
 
 
 
@@ -69,7 +176,7 @@ def check_result(board,sign):
 
 
 
-def play(choice_board,index):
+def play(choice_board,index,weights):
    
     while True :
         board = -1*np.ones((3,3),dtype='int32')
@@ -91,17 +198,24 @@ def play(choice_board,index):
                 board = choose(board,choice_pos,0)
                 print_(board)
                 if check_result(board,0):
+                    weights[row,:][ind] -= 10
                     print("yay! you won")
                     break
                 try:
-                    random_pos = choice_board[np.random.choice(index[(board==-1).flatten()])]
+                    ind = np.random.choice(index[(board==-1).flatten()])
+                    random_pos = choice_board[ind]
                 except:
                     random_pos=None
                 if random_pos is None:
                     break
+                row = np.sum((board==-1).flatten())-1
                 board = choose(board,random_pos,1)
+                update = update_weights(board,choice_board,1,ind)
+                print(update)
+                weights[row,:][ind] += update
                 print_(board)
                 if check_result(board,1):
+                    weights[row,:][ind] += 10
                     print("you lose")
                     break
         else:
@@ -110,14 +224,19 @@ def play(choice_board,index):
             while True :
                 
                 try:
-                    random_pos = choice_board[np.random.choice(index[(board==-1).flatten()])]
+                    ind = np.random.choice(index[(board==-1).flatten()])
+                    random_pos = choice_board[ind]
                 except:
                     random_pos=None
                 if random_pos is None:
                     break
+                row = np.sum((board==-1).flatten())-1
                 board = choose(board,random_pos,0)
+                update = update_weights(board,choice_board,0,ind)
+                weights[row,:][ind] += update 
                 print_(board)
                 if check_result(board,0):
+                    weights[row,:][ind] += 10
                     print("you lose ")
                     break
                 if np.all((board!=-1)):
@@ -132,12 +251,14 @@ def play(choice_board,index):
                 
                 print_(board)
                 if check_result(board,1):
+                    weights[row,:][ind] -= 10
                     print("yay! you won")
                     break
                 
         
         play_again = int(input('wanna play again'))
         if not play_again:
+            print(weights)
             break
-play(choice_board,index)
+play(choice_board,index,weights)
             
