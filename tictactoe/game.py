@@ -24,10 +24,17 @@ def print_(board):
             print("________")
     print('\n \n')
 
-def choose(board,pos,sign):
-    board[pos[0]][pos[1]]=sign
-    
-    return board
+def choose(board,weights,index,choice_board,t,selection_times,pos=None,sign=0,bot= False,c=0.1):
+    if not bot:
+        board[pos[0]][pos[1]]=sign
+    else:
+        row = np.sum((board==-1).flatten())-1
+        actions = index[(board==-1).flatten()]
+
+        temp = np.argmax(weights[row,:][actions]+c*np.sqrt((np.log(t)/(selection_times[row,:][actions]+1))))
+        action = actions[temp]
+        #board[choice_board[action][0],choice_board[action][1]] = sign
+        return action
 
 def update_weights(board,choice_board,sign,ind):
     update = 0
@@ -175,7 +182,7 @@ def check_result(board,sign):
 
 
 
-
+#board,weights,index,choice_board,t,selection_times,pos=None,sign=0,bot= False,c=0.1
 def play(choice_board,index,weights):
    
     while True :
@@ -260,5 +267,132 @@ def play(choice_board,index,weights):
         if not play_again:
             print(weights)
             break
-play(choice_board,index,weights)
+#play(choice_board,index,weights)
+
+
+
+
+
+
+def train(choice_board,index,weights,t,selection_times,bot=(True,True),c=0.1):
+   
+    df = pd.DataFrame(columns =['bot','0','1','2','3','4','5','6','7','8'])
+    board = -1*np.ones((3,3),dtype='int32')
+    #toss_input = int(input('choose Head(0) or Tail(1)'))
+    toss = np.random.choice([0,1])
+    if toss:
+        #print('Bot 1 won the toss ! \n \n your sign is 0')
+        while True:
+            if  np.all((board!=-1)):
+                break
+            row1 = np.sum((board==-1).flatten())-1
+            try:
+                ind = choose(board,weights,index,choice_board,t,selection_times,sign=0,bot=True,c=c)
+                pos = choice_board[ind]
+                board[pos[0],pos[1]] = 0
+                selection_times[row1,:][ind] += 1
+                df.loc[len(df)] = [1]+list(board.flatten())
+            except:
+                pos = None
+            if pos is None:
+                break
+            #print_(board)
+            update = update_weights(board,choice_board,0,ind)
+            #print(update)
+            weights[row1,:][ind] += update
+            if check_result(board,0):
+                weights[row1,:][ind] += 10
+                weights[row2,:][ind] -= 10
+                #print_(board)
+                #print("bot 1 won")
+                break
+            row2 = np.sum((board==-1).flatten())-1
+            try:
+                ind = choose(board,weights,index,choice_board,t,selection_times,sign=1,bot=True,c=c)
+                pos = choice_board[ind]
+                board[pos[0],pos[1]] = 1
+                selection_times[row2,:][ind] += 1
+                df.loc[len(df)] = [2]+list(board.flatten())
+            except:
+                pos = None
+            if pos is None:
+                break
+            update = update_weights(board,choice_board,1,ind)
+            #print(update)
+            weights[row2,:][ind] += update
+            #print_(board)
+            if check_result(board,1):
+                weights[row1,:][ind] -= 10
+                weights[row2,:][ind] += 10
+                #print_(board)
+                #print("bot 2 won ")
+                break
+    else:
+        #print('Bot 2 won the toss ! \n \n your sign is 0')
+
+        while True :
             
+            if  np.all((board!=-1)):
+                return weights,selection_times
+
+            row1 = np.sum((board==-1).flatten())-1
+            try:
+                ind = choose(board,weights,index,choice_board,t,selection_times,sign=1,bot=True,c=c)
+                pos = choice_board[ind]
+                board[pos[0],pos[1]] = 1
+                selection_times[row1,:][ind] += 1
+                df.loc[len(df)] = [2]+list(board.flatten())
+            except:
+                pos = None
+            if pos is None:
+                break
+
+            
+            #print(ind)
+            update = update_weights(board,choice_board,1,ind)
+            #print(update)
+            weights[row1,:][ind] += update
+            #print_(board)
+            if check_result(board,1):
+                weights[row1,:][ind] += 10
+                weights[row2,:][ind] -= 10
+                #print_(board)
+                #print("bot 2 won")
+                break
+
+            row2 = np.sum((board==-1).flatten())-1
+            try:
+                ind = choose(board,weights,index,choice_board,t,selection_times,sign=0,bot=True,c=c)
+                pos = choice_board[ind]
+                
+                board[pos[0],pos[1]] = 0
+                selection_times[row2,:][ind] += 1
+                df.loc[len(df)] = [1]+list(board.flatten())
+            except:
+                pos = None
+            if pos is None:
+                break
+
+            update = update_weights(board,choice_board,0,ind)
+            #print(update)
+            weights[row2,:][ind] += update
+            #print_(board)
+            if check_result(board,0):
+                weights[row1,:][ind] -= 10
+                weights[row2,:][ind] += 10
+                #print_(board)
+                #print("bot 1 won ")
+                break
+    df.to_csv('result/result'+str(t)+'.csv')
+    return weights,selection_times
+
+  
+import pandas as pd
+for i in range(1,10000):
+    weights,selection_times =  train(choice_board,index,weights,i,selection_times)
+
+
+df = pd.DataFrame(weights)
+df1 = pd.DataFrame(selection_times)
+df.to_csv('weights.csv')
+df1.to_csv('selection_times.csv')
